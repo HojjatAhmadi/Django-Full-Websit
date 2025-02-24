@@ -1,4 +1,4 @@
-nav class="navbar navbar-dark bg-dark fixed-top">
+<nav class="navbar navbar-dark bg-dark fixed-top">
     <div class="container-fluid">
         <a class="navbar-brand" href="#">ProjectManager</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDarkNavbar"
@@ -40,9 +40,9 @@ nav class="navbar navbar-dark bg-dark fixed-top">
                         </a>
 
                         <ul class="dropdown-menu dropdown-menu-dark">
-                            <li><a class="dropdown-item" href="{% url 'accounts:user_profile' %}">profile</a></li>
+                            <li><a class="dropdown-item" href="#">profile</a></li>
                             <hr class="dropdown-divider">
-                            <li><a class="dropdown-item" href="{% url 'accounts:user_logout' %}">logout</a></li>
+                            <li><a class="dropdown-item" href="#">logout</a></li>
                         </ul>
 
                     </li>
@@ -54,9 +54,9 @@ nav class="navbar navbar-dark bg-dark fixed-top">
                         </a>
 
                         <ul class="dropdown-menu dropdown-menu-dark">
-                            <li><a class="dropdown-item" href="{% url 'accounts:user_register' %}">register</a></li>
+                            <li><a class="dropdown-item" href="#">register</a></li>
                             <hr class="dropdown-divider">
-                            <li><a class="dropdown-item" href="{% url 'accounts:user_login' %}">login</a></li>
+                            <li><a class="dropdown-item" href="{% url 'accounts:login_form_accounts' %}">login</a></li>
                         </ul>
 
                     </li>
