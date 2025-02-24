@@ -1,6 +1,6 @@
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django import forms
-from .models import User
+from .models import User, Profile
 
 
 class LoginForm(AuthenticationForm):
@@ -10,6 +10,7 @@ class LoginForm(AuthenticationForm):
 
     username = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
     password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+
 
 class RegisterForm(UserCreationForm):
     class Meta:
