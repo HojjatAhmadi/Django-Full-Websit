@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="{% static 'swiper.css' %}">
 {% endblock %}
 {% block content %}
-    <div class="container d-block p-5" style="min-height: 100vh">
+    <div class="container d-flex flex-column justify-content-start align-items-center pt-5 gap-5 w-100" style="min-height: 100vh">
         {% for cat in category %}
             <div class="w-100 bg-white rounded p-2 h-auto" style="color: black">
                 <h2>{{ cat.name }}</h2>
@@ -17,18 +17,18 @@
                                   slides-per-view="3">
                     {% for product in products %}
                         {% if product.category.name == cat.name %}
-                            <swiper-slide class="card p-3">
-                                <img src="{{ product.img.url }}" class="card-img w-100"/>
+                            <swiper-slide class="card" style="width: 18rem;">
+                                <img src="{{ product.img.url }}" class="card-img-top" style="object-fit: cover"/>
                                 <h3 class="card-title">{{ product.name }}</h3>
                                 <p class="card-text">{{ product.description }}</p>
                                 <div class="d-inline">
                                     <h3 class="badge" style="color:black">Price :</h3>
                                     <h4 class="badge bg-secondary text-decoration-line-through">{{ product.price_original }}$</h4>
-                                    <span class="badge bg-danger">{{ product.offer }}% Off</span>
+                                    <span class="badge bg-danger">{{ product.offer }}%off</span>
                                     <h4 class="badge bg-primary">{{ product.price_buy }}$</h4>
                                 </div>
-                                <div class="btn-group w-100">
-                                    <a href="#" class="btn btn-warning">more info</a>
+                                <div class="w-100 p-2">
+                                    <a href="{% url 'products:product_view'  product.pk  %}" class="btn btn-warning">more info</a>
                                     <a href="#" class="btn btn-success">add to cart</a>
                                 </div>
                             </swiper-slide>
