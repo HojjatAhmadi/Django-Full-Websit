@@ -29,13 +29,29 @@
                                 </div>
                                 <div class="w-100 p-2">
                                     <a href="{% url 'products:product_view'  product.pk  %}" class="btn btn-warning">more info</a>
-                                    <a href="#" class="btn btn-success">add to cart</a>
+                                    <form method="post" action="{% url 'products:add_cart_view' product.pk 1 %}" class="d-flex gap-2 p-1 form">
+                                        {% csrf_token %}
+                                        <input type="number" id='quantity' class="form-control w-auto"/>
+                                        <button type="submit" class="btn btn-success" id="submit">add to cart</button>
+                                    </form>
                                 </div>
                             </swiper-slide>
                         {% endif %}
                     {% endfor %}
                 </swiper-container>
             </div>
+            <script>
+                const input_quantity = document.querySelector("#quantity");
+                const submit_btn = document.querySelector("#submit")
+                submit_btn.addEventListener("click", function(text){
+                    let quantity = input_quantity.value
+                    const form_tag = document.querySelector(".form")
+                    if (quantity === "" || quantity == null){
+                        return;
+                    }
+                    form_tag.setAttribute("action", "/product/add/1/"+quantity)
+                });
+            </script>
         {% endfor %}
     </div>
 {% endblock %}

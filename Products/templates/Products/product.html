@@ -27,9 +27,23 @@
                 <span class="font-weight-bold h4"><strong>New Price:</strong></span>
                 <span class="badge bg-primary" style="font-size: 16px">{{ product.price_buy }}$</span>
             </div>
-            <div class="d-inline">
-                <a href="#" class="btn btn-success">add to cart</a>
-            </div>
+            <form method="post" action="{% url 'products:add_cart_view' product.pk 1 %}" class="d-flex gap-2 p-1 form">
+                {% csrf_token %}
+                <input type="number" id='quantity' class="form-control w-auto"/>
+                <button type="submit" class="btn btn-success" id="submit">add to cart</button>
+            </form>
         </div>
     </div>
+    <script>
+        const input_quantity = document.querySelector("#quantity");
+        const submit_btn = document.querySelector("#submit")
+        submit_btn.addEventListener("click", function (text) {
+            let quantity = input_quantity.value
+            const form_tag = document.querySelector(".form")
+            if (quantity === "" || quantity == null) {
+                return;
+            }
+            form_tag.setAttribute("action", "/product/add/1/" + quantity)
+        });
+    </script>
 {% endblock %}

@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import View
-from .models import Products, Category
+from django.http import HttpResponse, HttpResponseRedirect
+from .models import Products, Category, CartProduct
 
 
 # Create your views here.
@@ -22,3 +23,15 @@ class ProductView(View):
     def get(self, request, pk):
         product = get_object_or_404(Products, pk=pk)
         return render(request, self.template_name, {'product': product})
+
+
+class AddToCartView(View):
+    def post(self, request, pk, quantity):
+        product = get_object_or_404(Products, pk=pk)
+        if CartProduct.objects.filter(product=product, user=request.user).exists():
+            cart = get_object_or_404(CartProduct, product=product, user=request.user)
+            cart.quantity += quantity
+            cart.save()
+        else:
+            CartProduct.objects.create(product=product, user=request.user, quantity=quantity)
+        return redirect(request.META.get('HTTP_REFERER'))
