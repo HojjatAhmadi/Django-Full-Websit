@@ -8,9 +8,9 @@
     <link rel="stylesheet" href="{% static 'swiper.css' %}">
 {% endblock %}
 {% block content %}
-    <div class="row gap-3 p-5">
+    <div class="row gap-3 p-5" style="color:black">
         <div class="bg-white rounded p-3 w-auto">
-            <img src="{{ product.img.url }}" class="rounded" style="width: 18rem"/>
+            <img src="{{ product.img.url }}" class="rounded" style="max-width: 18rem"/>
         </div>
         <div class="col w-75 bg-white rounded d-flex flex-column justify-content-start align-items- gap-3 p-3">
             <h2>{{ product.name }}</h2>
@@ -34,16 +34,51 @@
             </form>
         </div>
     </div>
+    <div class="row d-flex flex-column h-max w-100 p-5">
+        <h2>Similar Product</h2>
+        <swiper-container class="mySwiper h-auto" pagination="true" pagination-clickable="true"
+                          space-between="30"
+                          slides-per-view="3">
+            {% for p in products %}
+                {% if p.category.name == product.category.name and p != product %}
+                    <swiper-slide class="card" style="max-width: max-content">
+                        <img src="{{ p.img.url }}" class="card-img-top" style="object-fit: cover"/>
+                        <h3 class="card-title">{{ p.name }}</h3>
+                        <p class="card-text">{{ p.description }}</p>
+                        <div class="d-inline">
+                            <h3 class="badge" style="color:black">Price :</h3>
+                            <h4 class="badge bg-secondary text-decoration-line-through">{{ p.price_original }}$</h4>
+                            <span class="badge bg-danger">{{ p.offer }}%off</span>
+                            <h4 class="badge bg-primary">{{ p.price_buy }}$</h4>
+                        </div>
+                        <div class="w-100 p-2">
+                            <a href="{% url 'products:product_view'  p.pk %}" class="btn btn-warning">more
+                                info</a>
+                            <form method="post" action="{% url 'products:add_cart_view' p.pk 1 %}"
+                                  class="d-flex gap-2 p-1 form">
+                                {% csrf_token %}
+                                <input type="number" id='quantity' class="form-control w-auto"/>
+                                <button type="submit" class="btn btn-success" id="submit">add to cart</button>
+                            </form>
+                        </div>
+                    </swiper-slide>
+                {% endif %}
+            {% endfor %}
+        </swiper-container>
+
+    </div>
     <script>
         const input_quantity = document.querySelector("#quantity");
-        const submit_btn = document.querySelector("#submit")
-        submit_btn.addEventListener("click", function (text) {
-            let quantity = input_quantity.value
-            const form_tag = document.querySelector(".form")
+        input_quantity.addEventListener("input", function () {
+            let quantity = input_quantity.value;
+            const form_tag = document.querySelector(".form");
             if (quantity === "" || quantity == null) {
                 return;
             }
-            form_tag.setAttribute("action", "/product/add/1/" + quantity)
+            let link = form_tag.getAttribute("action");
+            let link_array = link.split("/");
+            link_array.pop();
+            form_tag.setAttribute("action", link_array.join("/") + "/" + quantity);
         });
     </script>
 {% endblock %}

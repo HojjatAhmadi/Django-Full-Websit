@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import View
 from django.http import HttpResponse, HttpResponseRedirect
+from django.contrib import messages
 from .models import Products, Category, CartProduct
 
 
@@ -22,16 +23,21 @@ class ProductView(View):
 
     def get(self, request, pk):
         product = get_object_or_404(Products, pk=pk)
-        return render(request, self.template_name, {'product': product})
+        products = Products.objects.all()
+        return render(request, self.template_name, {'product': product, 'products': products})
 
 
 class AddToCartView(View):
     def post(self, request, pk, quantity):
         product = get_object_or_404(Products, pk=pk)
+        message_type = "success"
         if CartProduct.objects.filter(product=product, user=request.user).exists():
             cart = get_object_or_404(CartProduct, product=product, user=request.user)
             cart.quantity += quantity
             cart.save()
+            message_msg = "your cart was update successfully"
         else:
             CartProduct.objects.create(product=product, user=request.user, quantity=quantity)
+            message_msg = "new product was added successfully"
+        messages.success(request, message_msg, "success")
         return redirect(request.META.get('HTTP_REFERER'))
