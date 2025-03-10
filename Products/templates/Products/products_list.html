@@ -8,16 +8,17 @@
     <link rel="stylesheet" href="{% static 'swiper.css' %}">
 {% endblock %}
 {% block content %}
-    <div class="container d-flex flex-column justify-content-start align-items-center pt-5 gap-5 w-100" style="min-height: 100vh">
+    <div class="container d-flex flex-column justify-content-start align-items-center p-5 gap-5 w-100"
+         style="min-height: 100vh">
         {% for cat in category %}
-            <div class="w-100 bg-white rounded p-2 h-auto" style="color: black">
+            <div class="row d-flex flex-column h-max w-100">
                 <h2>{{ cat.name }}</h2>
                 <swiper-container class="mySwiper h-auto" pagination="true" pagination-clickable="true"
                                   space-between="30"
                                   slides-per-view="3">
                     {% for product in products %}
                         {% if product.category.name == cat.name %}
-                            <swiper-slide class="card" style="width: 18rem;">
+                            <swiper-slide class="card" style="max-width: max-content">
                                 <img src="{{ product.img.url }}" class="card-img-top" style="object-fit: cover"/>
                                 <h3 class="card-title">{{ product.name }}</h3>
                                 <p class="card-text">{{ product.description }}</p>
@@ -28,11 +29,13 @@
                                     <h4 class="badge bg-primary">{{ product.price_buy }}$</h4>
                                 </div>
                                 <div class="w-100 p-2">
-                                    <a href="{% url 'products:product_view'  product.pk  %}" class="btn btn-warning">more info</a>
-                                    <form method="post" action="{% url 'products:add_cart_view' product.pk 1 %}" class="d-flex gap-2 p-1 form">
+                                    <a href="{% url 'products:product_view'  product.pk %}" class="btn btn-warning">more
+                                        info</a>
+                                    <form method="post" action="{% url 'products:add_cart_view' product.pk 1 %}"
+                                          class="d-flex p-1 gap-2 form">
                                         {% csrf_token %}
-                                        <input type="number" id='quantity' class="form-control w-auto"/>
-                                        <button type="submit" class="btn btn-success" id="submit">add to cart</button>
+                                        <input type="number" id='quantity' class="form-control" style="height: 40px"/>
+                                        <button type="submit" class="btn btn-success" id="submit" style="min-width: max-content">add to cart</button>
                                     </form>
                                 </div>
                             </swiper-slide>
@@ -42,14 +45,16 @@
             </div>
             <script>
                 const input_quantity = document.querySelector("#quantity");
-                const submit_btn = document.querySelector("#submit")
-                submit_btn.addEventListener("click", function(text){
-                    let quantity = input_quantity.value
-                    const form_tag = document.querySelector(".form")
-                    if (quantity === "" || quantity == null){
+                input_quantity.addEventListener("input", function () {
+                    let quantity = input_quantity.value;
+                    const form_tag = document.querySelector(".form");
+                    if (quantity === "" || quantity == null) {
                         return;
                     }
-                    form_tag.setAttribute("action", "/product/add/1/"+quantity)
+                    let link = form_tag.getAttribute("action");
+                    let link_array = link.split("/");
+                    link_array.pop();
+                    form_tag.setAttribute("action", link_array.join("/") + "/" + quantity);
                 });
             </script>
         {% endfor %}

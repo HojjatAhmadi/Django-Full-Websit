@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block title %}Search{% endblock %}
+{% block content %}
+    <div class="d-flex p-3 justify-content-start align-items-center flex-column gap-5">
+        <div class="form-group">
+            <form class="d-flex gap-3 h-auto justify-content-center align-items-center" role="search"
+                  action="{% url "products:search_view" %}" method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button class="btn btn-outline-success" style="height: max-content" type="submit">Search</button>
+                <br/>
+                <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+                    {% for cat in category %}
+                        {{ form2.as_p }}
+                        <input type="radio" class="btn-check" name="{{ cat.name }}" id="{{ cat.name }}"
+                               autocomplete="off">
+                        <label class="btn btn-outline-primary" for="{{ cat.name }}">{{ cat.name }}</label>
+                    {% endfor %}
+                </div>
+            </form>
+            <form class="d-flex gap-3 h-auto justify-content-center align-items-center" method="post">
+                {% csrf_token %}
+
+            </form>
+        </div>
+        <div class="d-flex flex-wrap justify-content-start align-items-start gap-3">
+            {% for p in products %}
+                <div class="card" style="width: max-content;">
+                    <img src="{{ p.img.url }}" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ p.name }}</h5>
+                        <p class="card-text">{{ p.description }}</p>
+                        <div class="d-flex flex-column justify-content-start align-items-start gap-3">
+                            <div class="d-inline w-100">
+                                <span class="h4"><strong>Original Price:</strong></span>
+                                <h4 class="badge bg-secondary"
+                                    style="font-size: 16px">{{ p.price_original }}$</h4>
+                            </div>
+                            <div class="d-inline w-100">
+                                <span class="font-weight-bold h4"><strong>Offer:</strong></span>
+                                <span class="badge bg-danger" style="font-size: 16px">{{ p.offer }}%</span>
+                            </div>
+                            <div class="d-inline w-100">
+                                <span class="font-weight-bold h4"><strong>New Price:</strong></span>
+                                <span class="badge bg-primary" style="font-size: 16px">{{ p.price_buy }}$</span>
+                            </div>
+                        </div>
+                        <form method="post" action="{% url 'products:add_cart_view' p.pk 1 %}"
+                              class="d-flex gap-2 p-1 form">
+                            {% csrf_token %}
+                            <input type="number" id='quantity' class="form-control w-auto"/>
+                            <button type="submit" class="btn btn-success" id="submit">add to cart</button>
+                        </form>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

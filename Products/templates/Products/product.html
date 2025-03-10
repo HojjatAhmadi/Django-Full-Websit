@@ -55,7 +55,7 @@
                             <a href="{% url 'products:product_view'  p.pk %}" class="btn btn-warning">more
                                 info</a>
                             <form method="post" action="{% url 'products:add_cart_view' p.pk 1 %}"
-                                  class="d-flex gap-2 p-1 form">
+                                  class="d-flex p-1 gap-2 form">
                                 {% csrf_token %}
                                 <input type="number" id='quantity' class="form-control w-auto"/>
                                 <button type="submit" class="btn btn-success" id="submit">add to cart</button>

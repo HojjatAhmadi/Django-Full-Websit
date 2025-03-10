@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import View
-from django.http import HttpResponse, HttpResponseRedirect
+from .forms import SearchForm, CategorySearchForm
 from django.contrib import messages
 from .models import Products, Category, CartProduct
 
@@ -41,3 +41,36 @@ class AddToCartView(View):
             message_msg = "new product was added successfully"
         messages.success(request, message_msg, "success")
         return redirect(request.META.get('HTTP_REFERER'))
+
+
+class SearchView(View):
+    template_name = 'Products/search.html'
+    form_class = SearchForm
+    form_class2 = CategorySearchForm
+
+    def get(self, request):
+        return render(request, self.template_name, {"products": Products.objects.all(), "category": Category.objects.all(), "form": self.form_class, "form2":self.form_class2})
+
+    def post(self, request):
+        data = request.POST
+
+        # get category
+        category = None
+        for cat in Category.objects.all():
+            try:
+                if data[cat.name] == 'on':
+                    category = cat.name
+            except:
+                continue
+
+        form = self.form_class(data)
+        if form.is_valid():
+            if form.cleaned_data['name']:
+                all_product = Products.objects.all()
+                products = []
+                for product in all_product:
+                    if str(form.cleaned_data['name']).lower() in str(product.name).lower():
+                        if category is not None and product.category.name == category:
+                            products.append(product)
+                return render(request, self.template_name,
+                              {"products": products, "form": self.form_class, "form2": self.form_class2, "category": Category.objects.all()})
