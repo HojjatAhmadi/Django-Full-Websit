@@ -5,6 +5,7 @@ from .forms import LoginForm, RegisterForm
 from django.core.exceptions import ValidationError
 from django.contrib import messages
 from .models import Profile, User
+from Products.models import CartProduct
 from django.contrib.auth import login, logout
 
 
@@ -41,9 +42,20 @@ class RegisterView(View):
 
 
 class ProfileView(View):
-    template_name = "Accounts/profile_accounts.html"
+    template_name = "Accounts/profile_info_accounts.html"
 
     def get(self, request):
         user = request.user
         profile = get_object_or_404(Profile, user=user)
         return render(request, self.template_name, {"profile": profile})
+
+
+class ProfileCartView(View):
+    template_name = "Accounts/profile_cart_accounts.html"
+
+    def get(self,request):
+        user = request.user
+        profile = get_object_or_404(Profile, user=user)
+        carts = CartProduct.objects.filter(user=self.request.user)
+        return render(self.request, self.template_name, {"carts": carts, "profile": profile})
+
