@@ -1,6 +1,6 @@
-from django.contrib import admin
 from django.urls import path
-from .views import  LoginView, RegisterView, ProfileView, ProfileCartView
+from .views import  LoginView, RegisterView, ProfileView, ProfileCartView, UpdateUserInfoView1, \
+    ChangePasswordView
 
 app_name = "accounts"
 
@@ -9,4 +9,6 @@ urlpatterns = [
     path("register/" , RegisterView.as_view() , name="register_form_accounts"),
     path("profile/", ProfileView.as_view(), name="profile_accounts"),
     path("profile/cart/", ProfileCartView.as_view(), name="profile_cart_accounts"),
+    path("update/", UpdateUserInfoView1.as_view(), name="update_user_info"),
+    path("password/update/", ChangePasswordView.as_view(), name="password_update"),
 ]

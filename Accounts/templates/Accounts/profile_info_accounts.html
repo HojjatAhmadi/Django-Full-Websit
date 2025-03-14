@@ -3,14 +3,14 @@
 {% block content %}
     <div class="container p-2 d-flex gap-3" style="height: 100vh">
         <main class="w-75 h-100 card p-5 gap-5">
-            <div class="bg-secondary w-100 p-3 row g-3" style="color:white; border-radius: 10px">
+            <div class="w-100 p-3 row g-3" style="color:white; border-radius: 10px; background-color: hsl(218, 41%, 15%);">
                 <h2>User Information's</h2>
                 <div class="d-inline col">
-                    <h4 class="badge">First Name</h4>
+                    <h4 class="badge dark-mode">First Name</h4>
                     <span>:</span>
                     <span class="badge bg-primary">
-                        {% if profile.user.firstname %}
-                            {{ profile.user.firstname }}
+                        {% if profile.user.first_name %}
+                            {{ profile.user.first_name }}
                         {% else %}
                             ---
                         {% endif %}
@@ -20,8 +20,8 @@
                     <h4 class="badge">Last Name</h4>
                     <span>:</span>
                     <span class="badge bg-primary">
-                        {% if profile.user.lastname %}
-                            {{ profile.user.lastname }}
+                        {% if profile.user.last_name %}
+                            {{ profile.user.last_name }}
                         {% else %}
                             ---
                         {% endif %}
@@ -37,15 +37,16 @@
                 <div class="d-inline col">
                     <h4 class="badge">Password</h4>
                     <span>:</span>
-                    <span class="badge bg-primary">
+                    <span class="badge bg-danger">
                         ***
                     </span>
                 </div>
-                <div class="btn-group w-100">
-                    <a href="#" class="btn btn-warning">Change Information</a>
+                <div class="d-flex flex-column w-100 gap-3">
+                    <a href="{% url "accounts:update_user_info" %}" class="btn btn-primary">Change Information</a>
+                    <a href="{% url "accounts:password_update" %}" class="btn btn-danger">Change Password</a>
                 </div>
             </div>
-            <div class="bg-secondary w-100 p-3 row g-3" style="color:white; border-radius: 10px">
+            <div class="w-100 p-3 row g-3" style="color:white; border-radius: 10px; background-color: hsl(218, 41%, 15%);">
                 <h2>Contact Information's</h2>
                 <div class="d-inline col">
                     <h4 class="badge">Email</h4>
@@ -73,31 +74,31 @@
                 </div>
             </div>
         </main>
-        <aside class="w-25 h-100 card p-5 d-flex flex-column justify-content-start align-items-center gap-3">
+        <aside class="w-25 h-100 card p-3 d-flex flex-column justify-content-start align-items-center gap-3" style="color:white;background-color: hsl(218, 41%, 15%);">
             <h3>
-                DashBoard User
+                Dashboard User
             </h3>
             <img src="{{ profile.img.url }}" class="rounded-circle p-1 bg-primary" width="110"/>
             <div class="card bg-primary w-100 p-3" style="color: white">
                 <div class="d-inline">
-                    <h4 class="badge bg-black">username</h4>
+                    <h4 class="badge bg-white" style="color: black">username</h4>
                     <span>:</span>
                     <span>@{{ profile.user.username }}</span>
                 </div>
                 <div class="d-inline">
-                    <h4 class="badge bg-danger">email</h4>
+                    <h4 class="badge bg-white" style="color: black">email</h4>
                     <span>:</span>
                     <span>{{ profile.user.email }}</span>
                 </div>
-                {% if profile.user.firstname or profile.user.lastname %}
+                {% if profile.user.first_name or profile.user.last_name %}
                     <div class="d-inline">
-                        <h4 class="badge bg-warning">full name</h4>
+                        <h4 class="badge bg-white" style="color: black">full name</h4>
                         <span>:</span>
-                        <span>{{ profile.user.firstname }} {{ profile.user.lastname }}</span>
+                        <span>{{ profile.user.first_name }} {{ profile.user.last_name }}</span>
                     </div>
                 {% endif %}
                 <div class="d-inline">
-                    <h4 class="badge bg-success">number of buy</h4>
+                    <h4 class="badge bg-white" style="color: black">number of buy</h4>
                     <span>:</span>
                     <span>{{ profile.number_buy }}</span>
                 </div>
