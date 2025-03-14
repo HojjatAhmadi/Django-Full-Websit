@@ -1,11 +1,15 @@
+from django.contrib.auth.hashers import make_password
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import views as auth_views
-from django.views.generic import View
+from django.views.generic import View, UpdateView
+from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import LoginForm, RegisterForm
-from django.core.exceptions import ValidationError
+from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib import messages
 from .models import Profile, User
+from Products.models import CartProduct
 from django.contrib.auth import login, logout
+from django.urls import reverse_lazy
 
 
 # Create your views here.
@@ -41,9 +45,36 @@ class RegisterView(View):
 
 
 class ProfileView(View):
-    template_name = "Accounts/profile_accounts.html"
+    template_name = "Accounts/profile_info_accounts.html"
 
     def get(self, request):
         user = request.user
         profile = get_object_or_404(Profile, user=user)
         return render(request, self.template_name, {"profile": profile})
+
+
+class ProfileCartView(View):
+    template_name = "Accounts/profile_cart_accounts.html"
+
+    def get(self, request):
+        user = request.user
+        profile = get_object_or_404(Profile, user=user)
+        carts = CartProduct.objects.filter(user=self.request.user)
+        return render(self.request, self.template_name, {"carts": carts, "profile": profile})
+
+
+class UpdateUserInfoView1(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
+    model = User
+    fields = ['first_name', 'last_name', 'username']
+    template_name = "Accounts/update_info_accounts.html"
+    success_url = reverse_lazy("accounts:profile_accounts")
+    success_message = "User Information Update Successful!"
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(User, username=self.request.user)
+
+
+class ChangePasswordView(SuccessMessageMixin,auth_views.PasswordChangeView):
+    success_message = "Password Change Successfully!"
+    template_name = "Accounts/password_change.html"
+    success_url = reverse_lazy("accounts:profile_accounts")

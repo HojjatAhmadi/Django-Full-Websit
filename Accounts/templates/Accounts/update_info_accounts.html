@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}Update User Info{% endblock %}
+{% block content %}
+    <div class="d-flex flex-column justify-content-center align-items-center w-100" style="height: 100vh">
+        <h2>Update User Info</h2>
+        <form class="card p-3 gap-3 w-50" method="post" action="{% url "accounts:update_user_info" %}">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">update</button>
+        </form>
+        <script>
+            const all_input = document.querySelectorAll("input")
+            all_input.forEach(e => {
+                e.classList = "form-control"
+            })
+        </script>
+    </div>
+{% endblock %}
