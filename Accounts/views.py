@@ -45,7 +45,7 @@ class RegisterView(View):
         return render(request, self.template_name, {"form": self.form_class})
 
 
-class ProfileView(View):
+class ProfileView(LoginRequiredMixin,View):
     template_name = "Accounts/profile_info_accounts.html"
 
     def get(self, request):
@@ -54,7 +54,7 @@ class ProfileView(View):
         return render(request, self.template_name, {"profile": profile})
 
 
-class ProfileCartView(View):
+class ProfileCartView(LoginRequiredMixin, View):
     template_name = "Accounts/profile_cart_accounts.html"
 
     def get(self, request):
@@ -75,7 +75,7 @@ class UpdateUserInfoView1(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
         return get_object_or_404(User, username=self.request.user)
 
 
-class ChangePasswordView(SuccessMessageMixin, auth_views.PasswordChangeView):
+class ChangePasswordView(SuccessMessageMixin,LoginRequiredMixin, auth_views.PasswordChangeView):
     success_message = "Password Change Successfully!"
     template_name = "Accounts/password_change.html"
     success_url = reverse_lazy("accounts:profile_accounts")
@@ -124,7 +124,7 @@ class UpdateUserInfoView2(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
         return super().form_valid(form)
 
 
-class LogoutView(View):
+class LogoutView(LoginRequiredMixin,View):
     def get(self, request):
         if request.user.is_authenticated:
             logout(request)
