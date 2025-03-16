@@ -9,8 +9,8 @@
                         {{ user.username }}{% else %}Guest{% endif %}
                 </a>
                 <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="{% url "accounts:profile_accounts" %}">Profile</a></li>
-                    <li><a class="dropdown-item" href="#">Logout</a></li>
+                    <li><a class="dropdown-item" style="color: black !important;" href="{% url "accounts:profile_accounts" %}">Profile</a></li>
+                    <li><a class="dropdown-item" style="color: black !important;" href="{% url "accounts:logout_accounts" %}">Logout</a></li>
                 </ul>
             </li>
             <li class="nav-item">

@@ -13,9 +13,10 @@ from django.urls import reverse_lazy
 
 
 # Create your views here.
-class LoginView(auth_views.LoginView):
+class LoginView(SuccessMessageMixin, auth_views.LoginView):
     form_class = LoginForm
     template_name = "Accounts/login_form_accounts.html"
+    success_message = "You have login success!"
 
 
 class RegisterView(View):
@@ -90,7 +91,7 @@ class UpdateUserInfoView2(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
     def get_object(self, queryset=None):
         return get_object_or_404(Profile, user=self.request.user)
 
-    def delete_old_image(self,file_path):
+    def delete_old_image(self, file_path):
         import os
         from django.conf import settings
         if not isinstance(file_path, str):
@@ -121,3 +122,14 @@ class UpdateUserInfoView2(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
             profile.img = new_img
             profile.save()
         return super().form_valid(form)
+
+
+class LogoutView(View):
+    def get(self, request):
+        if request.user.is_authenticated:
+            logout(request)
+            messages.success(request, "You have been logout success!", "success")
+            return redirect("accounts:login_form_accounts")
+        else:
+            messages.error(request, "You are not login!", "danger")
+            return redirect("accounts:login_form_accounts")
