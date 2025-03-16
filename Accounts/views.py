@@ -65,7 +65,7 @@ class ProfileCartView(View):
 
 class UpdateUserInfoView1(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
     model = User
-    fields = ['first_name', 'last_name', 'username']
+    fields = ['first_name', 'last_name', 'username', 'email']
     template_name = "Accounts/update_info_accounts.html"
     success_url = reverse_lazy("accounts:profile_accounts")
     success_message = "User Information Update Successful!"
@@ -74,7 +74,50 @@ class UpdateUserInfoView1(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
         return get_object_or_404(User, username=self.request.user)
 
 
-class ChangePasswordView(SuccessMessageMixin,auth_views.PasswordChangeView):
+class ChangePasswordView(SuccessMessageMixin, auth_views.PasswordChangeView):
     success_message = "Password Change Successfully!"
     template_name = "Accounts/password_change.html"
     success_url = reverse_lazy("accounts:profile_accounts")
+
+
+class UpdateUserInfoView2(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
+    model = Profile
+    fields = ['img', 'phone', 'address']
+    success_message = 'Your Profile was update successfully!'
+    success_url = reverse_lazy("accounts:profile_accounts")
+    template_name = "Accounts/update_profile.html"
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(Profile, user=self.request.user)
+
+    def delete_old_image(self,file_path):
+        import os
+        from django.conf import settings
+        if not isinstance(file_path, str):
+            try:
+                file_path = str(file_path)
+            except Exception as e:
+                print(e)
+                return False
+        profile = get_object_or_404(Profile, user=self.request.user)
+        if str(profile.img) == file_path:
+            img_file = os.path.join(settings.MEDIA_ROOT, str(profile.img))
+            if os.path.exists(img_file):
+                os.remove(img_file)
+                return True
+        return False
+
+    def form_valid(self, form):
+        old_profile = get_object_or_404(Profile, user=self.request.user)
+        profile = form.instance
+        if 'img' in self.request.FILES:
+            new_img = self.request.FILES['img']
+            if "default_avatar.jpg" not in str(old_profile.img):
+                response = self.delete_old_image(str(old_profile.img))
+                if not response:
+                    self.success_message = "Image Can not Be Changes!"
+                else:
+                    self.success_message = 'Your Profile was update successfully!'
+            profile.img = new_img
+            profile.save()
+        return super().form_valid(form)
