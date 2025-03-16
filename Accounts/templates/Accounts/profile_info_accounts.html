@@ -2,7 +2,7 @@
 {% block title %}User Information Page{% endblock %}
 {% block content %}
     <div class="container p-2 d-flex gap-3" style="height: 100vh">
-        <main class="w-75 h-100 card p-5 gap-5">
+        <main class="w-75 h-100 card p-5 gap-5 bg-body-tertiary">
             <div class="w-100 p-3 row g-3" style="color:white; border-radius: 10px; background-color: hsl(218, 41%, 15%);">
                 <h2>User Information's</h2>
                 <div class="d-inline col">
@@ -48,21 +48,21 @@
             </div>
             <div class="w-100 p-3 row g-3" style="color:white; border-radius: 10px; background-color: hsl(218, 41%, 15%);">
                 <h2>Contact Information's</h2>
-                <div class="d-inline col">
+                <div class="d-inline col-auto">
                     <h4 class="badge">Email</h4>
                     <span>:</span>
                     <span class="badge bg-primary">
                         {{ profile.user.email }}
                     </span>
                 </div>
-                <div class="d-inline col">
+                <div class="d-inline col-auto">
                     <h4 class="badge">Phone</h4>
                     <span>:</span>
                     <span class="badge bg-primary">
                         {{ profile.phone }}
                     </span>
                 </div>
-                <div class="d-inline col">
+                <div class="d-inline col-auto">
                     <h4 class="badge">Address</h4>
                     <span>:</span>
                     <span class="badge bg-primary">
@@ -70,7 +70,7 @@
                     </span>
                 </div>
                 <div class="btn-group w-100">
-                    <a href="#" class="btn btn-warning">Change Information</a>
+                    <a href="{% url 'accounts:update_profile' %}" class="btn btn-primary">Change Information</a>
                 </div>
             </div>
         </main>
